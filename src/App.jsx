@@ -191,14 +191,15 @@ export default function App() {
   // GSAP animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Navbar scroll behavior
+      // Navbar scroll behavior - adapts text color to transparent vs sticky state
       ScrollTrigger.create({
         start: "top -80px",
         onEnter: () => {
           gsap.to(navbarRef.current, {
-            backgroundColor: "rgba(242, 240, 233, 0.8)",
+            backgroundColor: "rgba(242, 240, 233, 0.85)",
             backdropFilter: "blur(20px)",
             borderColor: "rgba(46, 64, 54, 0.1)",
+            color: "#2E4036", // smoothly transition text to dark green
             paddingTop: "8px",
             paddingBottom: "8px",
             boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
@@ -211,6 +212,7 @@ export default function App() {
             backgroundColor: "rgba(242, 240, 233, 0)",
             backdropFilter: "blur(0px)",
             borderColor: "rgba(46, 64, 54, 0)",
+            color: "#F2F0E9", // smoothly transition text back to white/cream
             paddingTop: "20px",
             paddingBottom: "20px",
             boxShadow: "none",
@@ -318,6 +320,83 @@ export default function App() {
         // Mobile: reset styling to ensure standard natural scrolling
         cards.forEach((card) => {
           gsap.set(card, { clearProps: "all" });
+
+          // High-performance scroll reveal on mobile without scroll pinning
+          gsap.from(card.querySelector('.max-w-7xl'), {
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            },
+            y: 30,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power2.out"
+          });
+        });
+
+        // Mobile reveals for other sections to make the experience dynamic
+        gsap.from("#services .group", {
+          scrollTrigger: {
+            trigger: "#services",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          },
+          y: 25,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+
+        gsap.from("#beforeafter", {
+          scrollTrigger: {
+            trigger: "#beforeafter",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          },
+          y: 25,
+          opacity: 0,
+          duration: 0.6,
+          ease: "power2.out"
+        });
+
+        gsap.from("#masters .group", {
+          scrollTrigger: {
+            trigger: "#masters",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          },
+          y: 25,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+
+        gsap.from("#loyalty .grid > div", {
+          scrollTrigger: {
+            trigger: "#loyalty",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          },
+          y: 25,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+
+        gsap.from("#booking", {
+          scrollTrigger: {
+            trigger: "#booking",
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          },
+          y: 30,
+          opacity: 0,
+          duration: 0.7,
+          ease: "power2.out"
         });
       });
 
@@ -380,20 +459,20 @@ export default function App() {
       {/* Floating Island Navbar */}
       <nav 
         ref={navbarRef}
-        className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[92%] md:w-[85%] max-w-7xl z-50 py-4 md:py-5 px-6 md:px-8 rounded-full border border-transparent flex justify-between items-center transition-all duration-300"
+        className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[92%] md:w-[85%] max-w-7xl z-50 py-4 md:py-5 px-6 md:px-8 rounded-full border border-transparent flex justify-between items-center transition-all duration-300 text-cream/90"
         style={{ transform: "translateX(-50%)" }}
       >
         <a href="#hero" className="flex items-center gap-2 group">
           <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-cream overflow-hidden transition-transform duration-300 group-hover:rotate-12">
             <Scissors size={14} />
           </div>
-          <span className="font-heading font-extrabold text-sm md:text-base tracking-tight text-primary">
+          <span className="font-heading font-extrabold text-sm md:text-base tracking-tight text-current">
             BARK & SHIMMER
           </span>
         </a>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8 font-sans text-sm font-medium text-primary">
+        <div className="hidden md:flex items-center gap-8 font-sans text-sm font-medium text-current">
           <a href="#services" className="hover:text-accent transition-colors duration-200 hover:-translate-y-[1px] transform">Услуги & Прайс</a>
           <a href="#beforeafter" className="hover:text-accent transition-colors duration-200 hover:-translate-y-[1px] transform">Результаты</a>
           <a href="#masters" className="hover:text-accent transition-colors duration-200 hover:-translate-y-[1px] transform">Мастера</a>
@@ -413,7 +492,7 @@ export default function App() {
         {/* Mobile Menu Icon */}
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-primary hover:text-accent transition-colors duration-200 p-1"
+          className="md:hidden text-current hover:text-accent transition-colors duration-200 p-1"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -478,6 +557,8 @@ export default function App() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/30 to-charcoal/50" />
           <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-transparent to-transparent" />
+          {/* Smooth transition gradient to the next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 md:h-36 bg-gradient-to-t from-cream to-transparent z-10 pointer-events-none" />
         </div>
 
         {/* Hero Content Box */}
