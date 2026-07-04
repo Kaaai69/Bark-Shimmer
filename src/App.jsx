@@ -281,6 +281,9 @@ export default function App() {
 
       mm.add("(min-width: 1024px)", () => {
         if (cards.length > 0) {
+          // Initialize: first card is in place, rest are shifted down off-screen
+          gsap.set(cards.slice(1), { yPercent: 100 });
+
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: ".protocol-section",
@@ -293,13 +296,19 @@ export default function App() {
 
           cards.forEach((card, index) => {
             if (index < cards.length - 1) {
-              tl.to(card, {
-                scale: 0.92,
+              const nextCard = cards[index + 1];
+              tl.to(nextCard, {
+                yPercent: 0,
+                ease: "none",
+                duration: 1
+              }, index)
+              .to(card, {
+                scale: 0.94,
                 opacity: 0.5,
                 filter: "blur(6px)",
-                yPercent: -8,
-                ease: "none"
-              }, index); // staggered by index
+                ease: "none",
+                duration: 1
+              }, index);
             }
           });
         }
@@ -308,7 +317,7 @@ export default function App() {
       mm.add("(max-width: 1023px)", () => {
         // Mobile: reset styling to ensure standard natural scrolling
         cards.forEach((card) => {
-          gsap.set(card, { scale: 1, filter: "none", opacity: 1, yPercent: 0 });
+          gsap.set(card, { clearProps: "all" });
         });
       });
 
@@ -995,10 +1004,10 @@ export default function App() {
       </section>
 
       {/* Protocol Block (Sticky Stacking Archive) */}
-      <section id="protocol" className="protocol-section bg-cream relative">
+      <section id="protocol" className="protocol-section bg-cream relative lg:h-screen lg:w-full lg:overflow-hidden">
         
         {/* Card 1: Diagnostic Step */}
-        <div className="stacking-card min-h-fit lg:min-h-screen w-full bg-[#EBE8DF] flex items-center py-16 md:py-20 lg:py-0 px-6 md:px-12 lg:sticky lg:top-0">
+        <div className="stacking-card relative lg:absolute lg:inset-0 min-h-fit lg:min-h-screen w-full bg-[#EBE8DF] flex items-center py-16 md:py-20 lg:py-0 px-6 md:px-12 z-10">
           <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
               <span className="font-data text-[10px] md:text-xs uppercase text-accent tracking-widest block mb-2">// ШАГ 01 // СЕНСОРНЫЙ АНАЛИЗ</span>
@@ -1038,7 +1047,7 @@ export default function App() {
         </div>
 
         {/* Card 2: Detox Step */}
-        <div className="stacking-card min-h-fit lg:min-h-screen w-full bg-[#E3E0D6] flex items-center py-16 md:py-20 lg:py-0 px-6 md:px-12 lg:sticky lg:top-0">
+        <div className="stacking-card relative lg:absolute lg:inset-0 min-h-fit lg:min-h-screen w-full bg-[#E3E0D6] flex items-center py-16 md:py-20 lg:py-0 px-6 md:px-12 z-20">
           <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
               <span className="font-data text-[10px] md:text-xs uppercase text-accent tracking-widest block mb-2">// ШАГ 02 // БИО-ОЧИЩЕНИЕ</span>
@@ -1080,7 +1089,7 @@ export default function App() {
         </div>
 
         {/* Card 3: Sculpting Step */}
-        <div className="stacking-card min-h-fit lg:min-h-screen w-full bg-[#DBD7CB] flex items-center py-16 md:py-20 lg:py-0 px-6 md:px-12 lg:sticky lg:top-0">
+        <div className="stacking-card relative lg:absolute lg:inset-0 min-h-fit lg:min-h-screen w-full bg-[#DBD7CB] flex items-center py-16 md:py-20 lg:py-0 px-6 md:px-12 z-30">
           <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
               <span className="font-data text-[10px] md:text-xs uppercase text-accent tracking-widest block mb-2">// ШАГ 03 // СКУЛЬПТУРА И ОБЪЕМ</span>
