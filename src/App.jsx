@@ -249,6 +249,31 @@ export default function App() {
         ease: "back.out(1.5)"
       }, "-=0.4");
 
+      // Hero Parallax and Fade-out transition on scroll
+      gsap.to(".hero-bg-image", {
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true
+        },
+        yPercent: 15,
+        scale: 1.15,
+        ease: "none"
+      });
+
+      gsap.to(".hero-content-container", {
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true
+        },
+        opacity: 0,
+        yPercent: -15,
+        ease: "none"
+      });
+
       // Features Cards Scroll Reveal
       gsap.from(".feature-card", {
         scrollTrigger: {
@@ -548,21 +573,19 @@ export default function App() {
 
       {/* Hero Section */}
       <header id="hero" className="relative h-screen w-full overflow-hidden flex items-end">
-        {/* Background Image & Gradient Overlays */}
-        <div className="absolute inset-0 bg-[#1A1A1A] z-0">
+        {/* Background Image & Gradient Overlays - Wrap in container for parallax */}
+        <div className="absolute inset-0 bg-[#1A1A1A] z-0 overflow-hidden hero-bg-container">
           <img 
             src={IMAGES.hero} 
             alt="Bark & Shimmer Premium Dog Grooming" 
-            className="w-full h-full object-cover object-center opacity-45 mix-blend-luminosity scale-105"
+            className="w-full h-full object-cover object-center opacity-45 mix-blend-luminosity scale-105 hero-bg-image"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/30 to-charcoal/50" />
           <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-transparent to-transparent" />
-          {/* Smooth transition gradient to the next section */}
-          <div className="absolute bottom-0 left-0 right-0 h-24 md:h-36 bg-gradient-to-t from-cream to-transparent z-10 pointer-events-none" />
         </div>
 
         {/* Hero Content Box */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pb-12 md:pb-24 flex flex-col justify-end h-full">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pb-12 md:pb-24 flex flex-col justify-end h-full hero-content-container">
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-1.5 bg-cream/10 backdrop-blur-md border border-cream/20 text-cream px-3.5 py-1.5 rounded-full text-[10px] uppercase tracking-widest font-data mb-4 md:mb-6">
               <Sparkles size={12} className="text-accent" /> БОТАНИЧЕСКИЙ СПА ДЛЯ ПИТОМЦЕВ
