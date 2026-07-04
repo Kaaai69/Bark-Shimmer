@@ -11,15 +11,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Mock Unsplash images for Moss/Organic Tech Preset A
 const IMAGES = {
-  hero: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=1200", // Elegant clean poodle dog
-  texture: "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&q=80&w=1200", // Dark organic moss
-  before: "https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&q=80&w=800", // Messy golden retriever look
-  after: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=800", // Clean happy golden retriever
-  master1: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600", // Elena V.
-  master2: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=600", // Mikhail K.
-  master3: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=600", // Anna S.
-  spa1: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=600", // botanical spa treatment
-  spa2: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=600", // oils and extracts
+  hero: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=2560", // Super sharp premium dog photo
+  texture: "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&q=80&w=1920", // Dark organic moss
+  before: "https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&q=80&w=1600", // Messy golden retriever (high resolution)
+  after: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=1600", // Clean happy golden retriever (high resolution)
+  master1: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=800",
+  master2: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800",
+  master3: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=800",
+  spa1: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=800",
+  spa2: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=800",
 };
 
 // Data models
@@ -275,13 +275,13 @@ export default function App() {
         ease: "power3.out"
       });
 
-      // Protocol Sticky Stacking Cards - Desktop Only Optimization
+      // Protocol Sticky Stacking Cards - Desktop Only Optimization using a unified GSAP Timeline
       let mm = gsap.matchMedia();
       const cards = gsap.utils.toArray('.stacking-card');
 
       mm.add("(min-width: 1024px)", () => {
         if (cards.length > 0) {
-          gsap.to(cards, {
+          const tl = gsap.timeline({
             scrollTrigger: {
               trigger: ".protocol-section",
               start: "top top",
@@ -290,23 +290,16 @@ export default function App() {
               scrub: true,
             }
           });
-          
+
           cards.forEach((card, index) => {
             if (index < cards.length - 1) {
-              ScrollTrigger.create({
-                trigger: card,
-                start: "top top",
-                end: `+=${(index + 1) * 100}%`,
-                scrub: true,
-                onUpdate: (self) => {
-                  const progress = self.progress;
-                  gsap.set(card, {
-                    scale: 1 - progress * 0.05,
-                    filter: `blur(${progress * 4}px)`,
-                    opacity: 1 - progress * 0.4,
-                  });
-                }
-              });
+              tl.to(card, {
+                scale: 0.92,
+                opacity: 0.5,
+                filter: "blur(6px)",
+                yPercent: -8,
+                ease: "none"
+              }, index); // staggered by index
             }
           });
         }
@@ -315,7 +308,7 @@ export default function App() {
       mm.add("(max-width: 1023px)", () => {
         // Mobile: reset styling to ensure standard natural scrolling
         cards.forEach((card) => {
-          gsap.set(card, { scale: 1, filter: "none", opacity: 1 });
+          gsap.set(card, { scale: 1, filter: "none", opacity: 1, yPercent: 0 });
         });
       });
 
@@ -864,9 +857,9 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Before (Top Layer, Clipped Width via clipPath for perfect align) */}
+              {/* Before (Top Layer, Clipped Width via clipPath for perfect align) - No transition classes for instant tracking */}
               <div 
-                className="absolute inset-0 w-full h-full transition-all duration-75"
+                className="absolute inset-0 w-full h-full"
                 style={{ clipPath: `inset(0 ${100 - sliderVal}% 0 0)` }}
               >
                 <img 

@@ -7,6 +7,21 @@
     background-color: #F2F0E9; /* cream */
     color: #1A1A1A;            /* charcoal */
     font-family: 'Outfit', sans-serif;
+    position: relative;
+  }
+
+  /* GPU-Accelerated Static Tiled Noise Overlay on body to avoid rendering lag */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 }
 
@@ -27,23 +42,9 @@
   background: #CC5833;
 }
 
-/* Noise texture overlay helper */
-.noise-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  content: "";
-  opacity: 0.05;
-  z-index: 9999;
-  pointer-events: none;
-}
-
-/* Stacking card transitions */
+/* Stacking card transitions - No CSS transitions here to avoid conflicts with GSAP */
 .stacking-card {
   will-change: transform, filter, opacity;
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Custom range input styling for before-after slider */
